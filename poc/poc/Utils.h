@@ -8,6 +8,7 @@
 #include "Cords.h"
 #include <vector>
 using namespace cv;
+//finds all black pixels
 std::vector<Cords> findBlackPixles(cv::Mat img)
 {
     std::vector<Cords> res;
@@ -15,18 +16,17 @@ std::vector<Cords> findBlackPixles(cv::Mat img)
     {
         for (int j = 0; j < img.cols; j++)
         {
-            //if (img.at<cv::Vec3b>(i, j) == cv::Vec3b(0, 0, 0))
-            //{
-            //    res.push_back(Cords(j, i));
-            //}
-            if (img.at<cv::Vec3b>(i, j) != cv::Vec3b(255, 255, 255))
+            //is black
+            if (img.at<cv::Vec3b>(i, j) == cv::Vec3b(0, 0, 0))
             {
                 res.push_back(Cords(j, i));
             }
+
         }
     }
     return res;
 }
+
 std::vector<std::vector<Cords>> getShapes(std::vector<Cords> blackPixels)
 {
     std::vector<std::vector<Cords>> res;
@@ -167,6 +167,86 @@ std::vector<Cords> getShapeEdges(std::vector<std::vector<Cords>> shapes,int maxX
     }
     return res;
 }
+
+std::vector<Cords> getAreas(std::vector<Cords> blackPixels)
+{
+    std::vector<Cords> res;
+    int shapeCount = 0;
+    //for each pixel
+    for (int n = 0; n < blackPixels.size(); n++)
+    {
+        std::cout << n + 1 << "\\" << blackPixels.size() << std::endl;
+        bool isNeeded = true;
+        for (int i = 0; i < res.size() && isNeeded; i++)
+        {
+            //if pixel is not part of an area
+            if (blackPixels[n].isInArea(res[i]))
+            {
+                isNeeded = false;
+            }
+        }
+        if (isNeeded)
+        {
+            //creates new area
+            Cords temp= Cords(blackPixels[n].x, blackPixels[n].y);
+            res.push_back(temp);
+            //adds all close pixels to new area
+            for (int i = 0; i < blackPixels.size(); i++)
+            {
+                if (blackPixels[i].isCloseToArea(res[shapeCount]))
+                {
+                    res[shapeCount].addToArea(blackPixels[i]);
+                }
+            }
+            shapeCount++;
+        }
+
+    }
+    //after areas found, merge close areas
+    std::cout << "shapes found: " << res.size() << std::endl;
+    std::vector<Cords> resMerged;
+    int mergedShapeCount = 0;
+    for (int i = 0; i < res.size(); i++)
+    {
+        std::cout << "check shape: " << i << "\\" << res.size() << std::endl;
+        bool isNeeded = true;
+        //if area is already a part of other area
+        for (int k = 0; k < resMerged.size() && isNeeded; k++)
+        {
+            if (resMerged[k].isAreaCloseToArea(res[i]))
+            {
+                isNeeded = false;
+            }
+        }
+        if (isNeeded)
+        {
+            //creates new 'merged area'
+            std::cout << "shapes merged!" << std::endl;
+            resMerged.push_back(res[i]);
+            for (int j = 0; j < res.size(); j++)
+            {
+                bool flag = false;
+                if (i != j)
+                {
+                    //merge all close areas
+                    if (resMerged[mergedShapeCount].isAreaCloseToArea(res[j]))
+                    {
+                        resMerged[mergedShapeCount].addAreaToArea(res[j]);
+                    }
+                }
+
+            }
+            mergedShapeCount++;
+        }
+
+    }
+    std::cout << "shapes merged: " << res.size() << " --> " << resMerged.size() << std::endl;
+    return resMerged;
+
+}
+
+
+//draw rectangle around the edge of the shape
 cv::Mat drawRect(std::vector<Cords> shapes, cv::Mat img )
 {
     for (int n = 0; n < shapes.size(); n++)
@@ -175,11 +255,11 @@ cv::Mat drawRect(std::vector<Cords> shapes, cv::Mat img )
         {
             for (int j = 0; j < img.cols; j++)
             {
-                if (i == shapes[n].y && j >= shapes[n].x && j <= shapes[n].xRight || i == shapes[n].yBottom && j >= shapes[n].x && j <= shapes[n].xRight)
+                if (i == shapes[n].y && j >= shapes[n].x && j <= shapes[n].xMax || i == shapes[n].yMax && j >= shapes[n].x && j <= shapes[n].xMax)
                 {
                     img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
                 }
-                if (j == shapes[n].x && i >= shapes[n].y && i <= shapes[n].yBottom || j == shapes[n].xRight && i >= shapes[n].y && i <= shapes[n].yBottom)
+                if (j == shapes[n].x && i >= shapes[n].y && i <= shapes[n].yMax || j == shapes[n].xMax && i >= shapes[n].y && i <= shapes[n].yMax)
                 {
                     img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
                 }

@@ -5,13 +5,18 @@ class Cords
 {
 public:
 	Cords(int x,int y);
-	Cords(int x, int y, int xRight, int yBottom);
+	Cords(int x, int y, int xMax, int yMax);
 	int x;
 	int y;
-	int xRight;
-	int yBottom;
+	int xMax;
+	int yMax;
 	bool operator==(const Cords& other);
 	bool isCloseTo(Cords other);
+	bool isCloseToArea(Cords area);
+	bool isInArea(Cords area);
+	bool isAreaCloseToArea(Cords area);
+	void addToArea(Cords point);
+	void addAreaToArea(Cords area);
 
 private:
 	
