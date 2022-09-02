@@ -27,7 +27,7 @@ bool Cords::isCloseToArea(Cords area)
 	//inside area
 	if (this->x >= area.x && this->y >= area.y && this->x <= area.xMax && this->y <= area.yMax) { return true; }
 	//toching sides
-	return (this->x >= area.x - CLOSE_PARAM && this->x >= area.xMax + CLOSE_PARAM && this->y >= area.y - CLOSE_PARAM && this->y >= area.yMax + CLOSE_PARAM);
+	return (this->x >= area.x - CLOSE_PARAM && this->x <= area.xMax + CLOSE_PARAM && this->y >= area.y - CLOSE_PARAM && this->y <= area.yMax + CLOSE_PARAM);
 }
 bool Cords::isInArea(Cords area)
 {
@@ -67,5 +67,5 @@ void Cords::addAreaToArea(Cords area)
 	if (this->x > area.x) { this->x = area.x; }
 	if (this->y > area.y) { this->y = area.y; }
 	if (this->xMax < area.xMax) { this->xMax = area.xMax; }
-	if (this->yMax < area.yMax) { this->y = area.yMax; }
+	if (this->yMax < area.yMax) { this->yMax = area.yMax; }
 }

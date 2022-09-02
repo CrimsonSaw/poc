@@ -193,15 +193,16 @@ std::vector<Cords> getAreas(std::vector<Cords> blackPixels)
             //adds all close pixels to new area
             for (int i = 0; i < blackPixels.size(); i++)
             {
-                if (blackPixels[i].isCloseToArea(res[shapeCount]))
+
+                if (i!=n && blackPixels[i].isCloseToArea(res[shapeCount]))
                 {
                     res[shapeCount].addToArea(blackPixels[i]);
                 }
             }
             shapeCount++;
         }
-
     }
+
     //after areas found, merge close areas
     std::cout << "shapes found: " << res.size() << std::endl;
     std::vector<Cords> resMerged;
@@ -223,7 +224,7 @@ std::vector<Cords> getAreas(std::vector<Cords> blackPixels)
             //creates new 'merged area'
             std::cout << "shapes merged!" << std::endl;
             resMerged.push_back(res[i]);
-            for (int j = 0; j < res.size(); j++)
+            for (int j = res.size()-1; j >=0; j--)
             {
                 bool flag = false;
                 if (i != j)
