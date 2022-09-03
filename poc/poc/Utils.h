@@ -206,41 +206,50 @@ std::vector<Cords> getAreas(std::vector<Cords> blackPixels)
     //after areas found, merge close areas
     std::cout << "shapes found: " << res.size() << std::endl;
     std::vector<Cords> resMerged;
-    int mergedShapeCount = 0;
-    for (int i = 0; i < res.size(); i++)
+    
+    int delta = -1;
+    while (delta != 0)
     {
-        std::cout << "check shape: " << i << "\\" << res.size() << std::endl;
-        bool isNeeded = true;
-        //if area is already a part of other area
-        for (int k = 0; k < resMerged.size() && isNeeded; k++)
+        resMerged.clear();
+        int mergedShapeCount = 0;
+        for (int i = 0; i < res.size(); i++)
         {
-            if (resMerged[k].isAreaCloseToArea(res[i]))
+            std::cout << "check shape: " << i << "\\" << res.size() << std::endl;
+            bool isNeeded = true;
+            //if area is already a part of other area
+            for (int k = 0; k < resMerged.size() && isNeeded; k++)
             {
-                isNeeded = false;
-            }
-        }
-        if (isNeeded)
-        {
-            //creates new 'merged area'
-            std::cout << "shapes merged!" << std::endl;
-            resMerged.push_back(res[i]);
-            for (int j = res.size()-1; j >=0; j--)
-            {
-                bool flag = false;
-                if (i != j)
+                if (resMerged[k].isAreaCloseToArea(res[i]))
                 {
-                    //merge all close areas
-                    if (resMerged[mergedShapeCount].isAreaCloseToArea(res[j]))
-                    {
-                        resMerged[mergedShapeCount].addAreaToArea(res[j]);
-                    }
+                    isNeeded = false;
                 }
-
             }
-            mergedShapeCount++;
-        }
+            if (isNeeded)
+            {
+                //creates new 'merged area'
+                std::cout << "shapes merged!" << std::endl;
+                resMerged.push_back(res[i]);
+                for (int j = res.size() - 1; j >= 0; j--)
+                {
+                    bool flag = false;
+                    if (i != j)
+                    {
+                        //merge all close areas
+                        if (resMerged[mergedShapeCount].isAreaCloseToArea(res[j]))
+                        {
+                            resMerged[mergedShapeCount].addAreaToArea(res[j]);
+                        }
+                    }
 
+                }
+                mergedShapeCount++;
+            }
+
+        }
+        delta = res.size() - resMerged.size();
+        res = resMerged;
     }
+    
     std::cout << "shapes merged: " << res.size() << " --> " << resMerged.size() << std::endl;
     return resMerged;
 

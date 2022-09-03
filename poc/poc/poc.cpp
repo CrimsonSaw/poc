@@ -14,7 +14,7 @@ using namespace std;
 
 int main()
 {
-    string image_path = "t3.png";
+    string image_path = "t1.png";
     Mat img = imread(image_path, IMREAD_COLOR);
     std::vector<Cords> blackPixels = findBlackPixles(img);
     //std::vector<std::vector<Cords>> shapes = getShapes(blackPixels);

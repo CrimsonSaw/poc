@@ -1,3 +1,4 @@
 ﻿  poc.cpp
-C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(227,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(232,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(249,46): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   poc.vcxproj -> C:\Users\eranf\Documents\magshi\poc\poc\x64\Debug\poc.exe
