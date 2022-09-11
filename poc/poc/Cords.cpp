@@ -72,7 +72,7 @@ void Cords::addAreaToArea(Cords area)
 
 bool  Cords::operator<(const Cords& other)
 {
-	return(this->yMax < other.y - 1) || (this->yMax == other.y && this->xMax < other.x - 1);
+	return(this->yMax < other.y - 1) || (this->yMax == other.y -1 && this->xMax < other.x - 1);
 }
 bool  Cords::operator>(const Cords& other)
 {
