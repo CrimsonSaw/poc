@@ -256,6 +256,111 @@ std::vector<Cords> getAreas(std::vector<Cords> blackPixels)
 }
 
 
+std::vector<Cords> getAreasBin(std::vector<Cords> blackPixels)
+{
+    std::vector<Cords> res;
+    int shapeCount = 0;
+    //for each pixel
+    for (int n = 0; n < blackPixels.size(); n++)
+    {
+        std::cout << n + 1 << "\\" << blackPixels.size() << std::endl;
+        bool isNeeded = true;
+        for (int i = 0; i < res.size() && isNeeded; i++)
+        {
+            //if pixel is not part of an area
+            if (blackPixels[n].isInArea(res[i]))
+            {
+                isNeeded = false;
+            }
+        }
+        if (isNeeded)
+        {
+            //creates new area
+            Cords temp = Cords(blackPixels[n].x, blackPixels[n].y);
+            
+            int curr = n-1;
+            bool flag = true;
+            while (flag && n!=0 && curr != 0)
+            {
+                
+                flag = !(temp > blackPixels[curr]);
+                if (blackPixels[curr].isCloseToArea(temp))
+                {
+                    temp.addToArea(blackPixels[curr]);
+                }
+                curr--;
+
+            }
+            curr = n+1;
+            flag = true;
+            while (flag && n!= blackPixels.size() && curr!= blackPixels.size())
+            {
+                
+                flag = !(temp < blackPixels[curr]);
+                if (blackPixels[curr].isCloseToArea(temp))
+                {
+                    temp.addToArea(blackPixels[curr]);
+                }
+                curr++;
+
+            }
+            res.push_back(temp);
+            shapeCount++;
+        }
+    }
+
+    //after areas found, merge close areas
+    std::cout << "shapes found: " << res.size() << std::endl;
+    std::vector<Cords> resMerged;
+
+    int delta = -1;
+    while (delta != 0)
+    {
+        resMerged.clear();
+        int mergedShapeCount = 0;
+        for (int i = 0; i < res.size(); i++)
+        {
+            std::cout << "check shape: " << i << "\\" << res.size() << std::endl;
+            bool isNeeded = true;
+            //if area is already a part of other area
+            for (int k = 0; k < resMerged.size() && isNeeded; k++)
+            {
+                if (resMerged[k].isAreaCloseToArea(res[i]))
+                {
+                    isNeeded = false;
+                }
+            }
+            if (isNeeded)
+            {
+                //creates new 'merged area'
+                std::cout << "shapes merged!" << std::endl;
+                resMerged.push_back(res[i]);
+                for (int j = res.size() - 1; j >= 0; j--)
+                {
+                    bool flag = false;
+                    if (i != j)
+                    {
+                        //merge all close areas
+                        if (resMerged[mergedShapeCount].isAreaCloseToArea(res[j]))
+                        {
+                            resMerged[mergedShapeCount].addAreaToArea(res[j]);
+                        }
+                    }
+
+                }
+                mergedShapeCount++;
+            }
+
+        }
+        delta = res.size() - resMerged.size();
+        res = resMerged;
+    }
+
+    std::cout << "shapes merged: " << res.size() << " --> " << resMerged.size() << std::endl;
+    return resMerged;
+
+}
+
 //draw rectangle around the edge of the shape
 cv::Mat drawRect(std::vector<Cords> shapes, cv::Mat img )
 {

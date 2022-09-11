@@ -14,12 +14,12 @@ using namespace std;
 
 int main()
 {
-    string image_path = "t1.png";
+    string image_path = "t3.png";
     Mat img = imread(image_path, IMREAD_COLOR);
     std::vector<Cords> blackPixels = findBlackPixles(img);
     //std::vector<std::vector<Cords>> shapes = getShapes(blackPixels);
     //std::vector<Cords> edges = getShapeEdges(shapes, img.rows, img.cols);
-    std::vector<Cords> edges = getAreas(blackPixels);
+    std::vector<Cords> edges = getAreasBin(blackPixels);
     img = drawRect(edges, img);
 
     imshow("f", img);

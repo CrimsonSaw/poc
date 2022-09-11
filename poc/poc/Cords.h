@@ -11,6 +11,8 @@ public:
 	int xMax;
 	int yMax;
 	bool operator==(const Cords& other);
+	bool operator<(const Cords& other);
+	bool operator>(const Cords& other);
 	bool isCloseTo(Cords other);
 	bool isCloseToArea(Cords area);
 	bool isInArea(Cords area);

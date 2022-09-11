@@ -69,3 +69,12 @@ void Cords::addAreaToArea(Cords area)
 	if (this->xMax < area.xMax) { this->xMax = area.xMax; }
 	if (this->yMax < area.yMax) { this->yMax = area.yMax; }
 }
+
+bool  Cords::operator<(const Cords& other)
+{
+	return(this->yMax < other.y - 1) || (this->yMax == other.y && this->xMax < other.x - 1);
+}
+bool  Cords::operator>(const Cords& other)
+{
+	return(this->y < other.y + 1) || (this->y == other.y && this->x < other.x + 1);
+}

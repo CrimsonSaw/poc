@@ -1,0 +1,15 @@
+﻿  Cords.cpp
+  poc.cpp
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(232,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(249,46): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(335,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\eranf\Documents\magshi\poc\poc\poc\Utils.h(352,46): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+poc.obj : error LNK2001: unresolved external symbol "void __cdecl cv::imshow(class cv::String const &,class cv::_InputArray const &)" (?imshow@cv@@YAXAEBVString@1@AEBV_InputArray@1@@Z)
+poc.obj : error LNK2001: unresolved external symbol "public: void __cdecl cv::Mat::copySize(class cv::Mat const &)" (?copySize@Mat@cv@@QEAAXAEBV12@@Z)
+poc.obj : error LNK2001: unresolved external symbol "public: void __cdecl cv::Mat::deallocate(void)" (?deallocate@Mat@cv@@QEAAXXZ)
+poc.obj : error LNK2001: unresolved external symbol "void __cdecl cv::fastFree(void *)" (?fastFree@cv@@YAXPEAX@Z)
+poc.obj : error LNK2001: unresolved external symbol "class cv::Mat __cdecl cv::imread(class cv::String const &,int)" (?imread@cv@@YA?AVMat@1@AEBVString@1@H@Z)
+poc.obj : error LNK2001: unresolved external symbol "private: void __cdecl cv::String::deallocate(void)" (?deallocate@String@cv@@AEAAXXZ)
+poc.obj : error LNK2001: unresolved external symbol "private: char * __cdecl cv::String::allocate(unsigned __int64)" (?allocate@String@cv@@AEAAPEAD_K@Z)
+poc.obj : error LNK2001: unresolved external symbol "int __cdecl cv::waitKey(int)" (?waitKey@cv@@YAHH@Z)
+C:\Users\eranf\Documents\magshi\poc\poc\x64\Release\poc.exe : fatal error LNK1120: 8 unresolved externals
