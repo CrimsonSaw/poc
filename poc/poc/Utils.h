@@ -16,8 +16,7 @@ std::vector<Cords> findBlackPixles(cv::Mat img)
     {
         for (int j = 0; j < img.cols; j++)
         {
-            //is black
-            if (img.at<cv::Vec3b>(i, j) == cv::Vec3b(0, 0, 0))
+            if (img.at<cv::Vec3b>(i, j)[0] < 64 && img.at<cv::Vec3b>(i, j)[0] < 64 && img.at<cv::Vec3b>(i, j)[0] < 64)
             {
                 res.push_back(Cords(j, i));
             }
@@ -33,7 +32,6 @@ std::vector<std::vector<Cords>> getShapes(std::vector<Cords> blackPixels)
     int shapeCount = 0;
     for (int n = 0; n < blackPixels.size(); n++)
     {
-        std::cout << n+1 << "\\" << blackPixels.size() << std::endl;
         bool isNeeded = true;
         for (int i = 0; i < res.size() && isNeeded; i++)
         {
@@ -78,12 +76,10 @@ std::vector<std::vector<Cords>> getShapes(std::vector<Cords> blackPixels)
         }
        
     }
-    std::cout << "shapes found: " << res.size()<<std::endl;
     std::vector<std::vector<Cords>> resMerged;
     int mergedShapeCount = 0;
     for (int i = 0; i < res.size(); i++)
     {
-        std::cout << "check shape: "<<i<<"\\" << res.size() << std::endl;
         bool isNeeded = true;
         for (int k = 0; k < resMerged.size() && isNeeded; k++)
         {
@@ -102,7 +98,6 @@ std::vector<std::vector<Cords>> getShapes(std::vector<Cords> blackPixels)
         }
         if (isNeeded)
         {
-            std::cout << "shapes merged!" << std::endl;
             resMerged.push_back(res[i]);
             for (int j = 0; j < res.size(); j++)
             {
@@ -289,7 +284,7 @@ std::vector<Cords> getAreasBin(std::vector<Cords> blackPixels)
             shapeCount++;
         }
     }
-
+    return res;
     //after areas found, merge close areas
     std::vector<Cords> resMerged;
 
@@ -341,22 +336,35 @@ std::vector<Cords> getAreasBin(std::vector<Cords> blackPixels)
 //draw rectangle around the edge of the shape
 cv::Mat drawRect(std::vector<Cords> shapes, cv::Mat img )
 {
-    for (int n = 0; n < shapes.size(); n++)
+    for (auto shape : shapes)
     {
-        for (int i = 0; i < img.rows; i++)
+        for (int i = shape.y; i <= shape.yMax; i++)
         {
-            for (int j = 0; j < img.cols; j++)
-            {
-                if (i == shapes[n].y && j >= shapes[n].x && j <= shapes[n].xMax || i == shapes[n].yMax && j >= shapes[n].x && j <= shapes[n].xMax)
-                {
-                    img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
-                }
-                if (j == shapes[n].x && i >= shapes[n].y && i <= shapes[n].yMax || j == shapes[n].xMax && i >= shapes[n].y && i <= shapes[n].yMax)
-                {
-                    img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
-                }
-            }
+            img.at<Vec3b>(i, shape.x) = Vec3b(0, 0, 255);
+            img.at<Vec3b>(i, shape.xMax) = Vec3b(0, 0, 255);
+        }
+        for (int i = shape.x; i <= shape.xMax; i++)
+        {
+            img.at<Vec3b>(shape.y,i) = Vec3b(0, 0, 255);
+            img.at<Vec3b>(shape.yMax,i) = Vec3b(0, 0, 255);
         }
     }
+    //for (int n = 0; n < shapes.size(); n++)
+    //{
+    //    for (int i = 0; i < img.rows; i++)
+    //    {
+    //        for (int j = 0; j < img.cols; j++)
+    //        {
+    //            if (i == shapes[n].y && j >= shapes[n].x && j <= shapes[n].xMax || i == shapes[n].yMax && j >= shapes[n].x && j <= shapes[n].xMax)
+    //            {
+    //                img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
+    //            }
+    //            if (j == shapes[n].x && i >= shapes[n].y && i <= shapes[n].yMax || j == shapes[n].xMax && i >= shapes[n].y && i <= shapes[n].yMax)
+    //            {
+    //                img.at<Vec3b>(i, j) = Vec3b(0, 0, 255);
+    //            }
+    //        }
+    //    }
+    //}
     return img;
 }
